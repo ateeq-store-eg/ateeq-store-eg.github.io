@@ -1,32 +1,34 @@
 {
  "store": {
   "name": "Ateeq",
-  "whatsapp": "",
-  "phone": "",
-  "email": "",
-  "address": "",
-  "hours": "",
-  "freeFrom": 1500
+  "whatsapp": "+201144462309",
+  "phone": "+201144462309",
+  "email": "mohamed.osama.r77@gmail.com",
+  "address": "New Cairo ",
+  "hours": "24 ",
+  "freeFrom": "1499"
  },
  "products": [
   {
-   "n": "Amber Oud",
-   "c": "#c98a3a",
+   "n": "عود البطل ",
+   "c": "#ffffff",
    "f": "Warm sweet",
    "fc": "honey",
-   "g": "Unisex",
+   "g": "Masculine",
    "ch": "Amber, oud, vanilla. Warm and long lasting",
-   "i": "House One · Reference 01",
-   "rt": 115,
+   "i": "House One · colonia 777",
+   "rt": 32,
    "p": 650,
    "notes": [
     "Bergamot, saffron",
     "Amber, oud, rose",
     "Vanilla, musk, sandalwood"
    ],
-   "desc": "Extrait de parfum, long lasting. Placeholder description: replace with your real product copy.",
-   "img": "",
-   "out": false
+   "desc": "شوية ريحه فاجرين",
+   "img": "img/--1795737416561.jpg",
+   "out": false,
+   "s30": 320,
+   "s100": 1350
   },
   {
    "n": "Noir Velvet",
