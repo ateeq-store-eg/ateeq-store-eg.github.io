@@ -1,0 +1,108 @@
+{
+ "store": {
+  "name": "Ateeq",
+  "whatsapp": "",
+  "phone": "",
+  "email": "",
+  "address": "",
+  "hours": "",
+  "freeFrom": 1500
+ },
+ "products": [
+  {
+   "n": "Amber Oud",
+   "c": "#c98a3a",
+   "f": "Warm sweet",
+   "fc": "honey",
+   "g": "Unisex",
+   "ch": "Amber, oud, vanilla. Warm and long lasting",
+   "i": "House One · Reference 01",
+   "rt": 115,
+   "p": 650,
+   "notes": [
+    "Bergamot, saffron",
+    "Amber, oud, rose",
+    "Vanilla, musk, sandalwood"
+   ],
+   "desc": "Extrait de parfum, long lasting. Placeholder description: replace with your real product copy.",
+   "img": "",
+   "out": false
+  },
+  {
+   "n": "Noir Velvet",
+   "c": "#6a2a3a",
+   "f": "Leather",
+   "fc": "sky",
+   "g": "Masculine",
+   "ch": "Leather, rose and musk with a dark finish",
+   "i": "House Two · Reference 02",
+   "rt": 84,
+   "p": 1100,
+   "notes": [
+    "Pink pepper, cardamom",
+    "Leather, rose",
+    "Musk, patchouli"
+   ],
+   "desc": "Extrait de parfum, long lasting. Placeholder description: replace with your real product copy.",
+   "img": "",
+   "out": false
+  },
+  {
+   "n": "Citrus Mirage",
+   "c": "#b9c75a",
+   "f": "Marine",
+   "fc": "sky",
+   "g": "Unisex",
+   "ch": "Citrus, marine and woody with elegant depth",
+   "i": "Ateeq original composition",
+   "rt": 67,
+   "p": 1100,
+   "notes": [
+    "Lemon, grapefruit",
+    "Sea salt, jasmine",
+    "Cedar, white musk"
+   ],
+   "desc": "Extrait de parfum, long lasting. Placeholder description: replace with your real product copy.",
+   "img": "",
+   "out": false
+  },
+  {
+   "n": "Midnight Rose",
+   "c": "#b0607a",
+   "f": "Gourmand",
+   "fc": "honey",
+   "g": "Feminine",
+   "ch": "Rose, patchouli and saffron. Rich and soft",
+   "i": "House Three · Reference 03",
+   "rt": 41,
+   "p": 700,
+   "notes": [
+    "Saffron, pear",
+    "Rose, patchouli",
+    "Amber, praline"
+   ],
+   "desc": "Extrait de parfum, long lasting. Placeholder description: replace with your real product copy.",
+   "img": "",
+   "out": false
+  },
+  {
+   "n": "Desert Musk",
+   "c": "#d9c28a",
+   "f": "Warm spicy",
+   "fc": "honey",
+   "g": "Masculine",
+   "ch": "Spice, musk and cedar. Quiet confidence",
+   "i": "House Four · Reference 04",
+   "rt": 58,
+   "p": 1150,
+   "notes": [
+    "Cardamom, cinnamon",
+    "Musk, incense",
+    "Cedar, tonka"
+   ],
+   "desc": "Extrait de parfum, long lasting. Placeholder description: replace with your real product copy.",
+   "img": "",
+   "out": false
+  }
+ ]
+}

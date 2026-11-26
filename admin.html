@@ -1,0 +1,102 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>Ateeq admin</title>
+<style>
+:root{--shell:#F7F5F1;--stone:#E0DCD1;--sky:#D5E3E8;--honey:#E4E3BC;--vir:#344945;--dark:#1E2C29}
+*{box-sizing:border-box}body{margin:0;background:var(--shell);color:var(--dark);font:15px/1.5 system-ui,Segoe UI,Arial,sans-serif}
+header{background:var(--dark);color:var(--shell);padding:14px 18px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5;gap:10px;flex-wrap:wrap}
+header b{letter-spacing:.2em}header a{color:var(--honey)}
+main{max-width:980px;margin:0 auto;padding:18px}
+.card{background:#fff;border:1px solid var(--stone);border-radius:12px;padding:16px;margin:0 0 16px}
+h2{margin:0 0 10px;font-size:18px}h3{margin:0}
+label{display:block;font-size:12px;color:var(--vir);margin:10px 0 3px;text-transform:uppercase;letter-spacing:.06em}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--stone);border-radius:8px;font:inherit;background:var(--shell);color:var(--dark)}
+textarea{min-height:70px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+button{background:var(--vir);color:#fff;border:0;border-radius:999px;padding:10px 18px;font:inherit;cursor:pointer}
+button.alt{background:var(--stone);color:var(--dark)}button.danger{background:#8a3a3a}
+button:disabled{opacity:.5}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pc{display:grid;grid-template-columns:120px 1fr;gap:14px}
+.th{width:120px;height:150px;border-radius:10px;background:var(--sky);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.th img{width:100%;height:100%;object-fit:contain}.sw{position:absolute;bottom:0;left:0;right:0;height:14px}
+.pc summary{cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center}
+small,.hint{color:#5d706b;font-size:13px}
+#msg{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:var(--dark);color:#fff;padding:12px 18px;border-radius:12px;max-width:92vw;display:none;z-index:9}
+@media(max-width:560px){.pc{grid-template-columns:1fr}.th{width:100%}}
+</style></head><body>
+<header><b>ATEEQ ADMIN</b><span class="bar"><a href="./" target="_blank">View store</a><button id="save">Save to site</button></span></header>
+<main>
+<div class="card" id="conn"><h2>1. Connect (one time on this device)</h2>
+<p class="hint">Saving needs a GitHub access token. It is stored only in this browser and goes only to GitHub. Create one at <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">github.com/settings/personal-access-tokens/new</a>: pick this repository only, and set Repository permissions, Contents: Read and write. Paste it here and tap Connect. Anyone opening this page without the token can look but cannot change anything.</p>
+<div class="row"><div><label>Repository owner</label><input id="own"></div><div><label>Repository name</label><input id="rep"></div><div><label>Access token</label><input id="tok" type="password" placeholder="github_pat_..." autocomplete="off"></div></div>
+<div class="bar" style="margin-top:12px"><button id="conBtn">Connect</button><button class="alt" id="dl">Download products.json</button><span id="cs" class="hint"></span></div></div>
+
+<div class="card"><h2>2. Store details</h2><div class="row">
+<div><label>Store name</label><input data-s="name"></div><div><label>WhatsApp number for orders (with country code, e.g. 201012345678)</label><input data-s="whatsapp" inputmode="numeric"></div>
+<div><label>Phone shown on Contact page</label><input data-s="phone"></div><div><label>Email shown on Contact page</label><input data-s="email"></div>
+<div><label>Address</label><input data-s="address"></div><div><label>Opening hours</label><input data-s="hours"></div>
+<div><label>Free delivery from (LE)</label><input data-s="freeFrom" inputmode="numeric"></div></div></div>
+
+<div class="card"><div class="bar" style="justify-content:space-between"><h2 style="margin:0">3. Products</h2><button id="add">+ Add product</button></div><div id="list" style="margin-top:12px"></div></div>
+<p class="hint">After tapping Save to site, the live store updates in about one minute. Prices: "Price 50 ml" is the main price. Leave 30 ml and 100 ml empty to calculate them automatically (65% and 180%).</p>
+</main><div id="msg"></div>
+<script>
+const $=i=>document.getElementById(i);let D={store:{},products:[]},sha=null,pending={};
+const host=location.hostname,isGh=host.endsWith('.github.io');
+$('own').value=localStorage.ao||(isGh?host.split('.')[0]:'');$('rep').value=localStorage.ar||(isGh?host:'');$('tok').value=localStorage.at||'';
+const msg=(t,ms=4000)=>{const m=$('msg');m.textContent=t;m.style.display='block';clearTimeout(m._t);if(ms)m._t=setTimeout(()=>m.style.display='none',ms)};
+const api=(p,o={})=>fetch('https://api.github.com/repos/'+$('own').value.trim()+'/'+$('rep').value.trim()+p,{...o,headers:{Accept:'application/vnd.github+json',Authorization:'Bearer '+$('tok').value.trim(),...(o.headers||{})}});
+const b64=s=>btoa(unescape(encodeURIComponent(s)));
+const COL=['#c98a3a','#6a2a3a','#b9c75a','#b0607a','#d9c28a','#344945','#7aa2b3'];
+async function load(){
+ try{if($('tok').value){const r=await api('/contents/products.json');if(r.ok){const j=await r.json();sha=j.sha;D=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,'')))));$('cs').textContent='Connected. Loaded from GitHub.';render();return}
+ $('cs').textContent='Token or repository not accepted ('+r.status+'). Showing the public copy (read only).'}}catch(e){}
+ try{const r=await fetch('products.json?v='+Date.now());D=await r.json()}catch(e){msg('Could not load products.json')}
+ render()}
+function render(){
+ document.querySelectorAll('[data-s]').forEach(i=>{i.value=(D.store||{})[i.dataset.s]||'';i.oninput=()=>{D.store=D.store||{};D.store[i.dataset.s]=i.value}});
+ const L=$('list');L.innerHTML='';
+ D.products.forEach((p,k)=>{const d=document.createElement('details');d.className='card pc';d.style.display='block';d.style.margin='0 0 10px';
+  const src=pending[k]||p.img||'';
+  d.innerHTML=`<summary><h3>${esc(p.n||'New product')}</h3><small>LE ${p.p||0}${p.out?' · sold out':''}</small></summary>
+  <div class="pc" style="margin-top:12px"><div><div class="th">${src?`<img src="${src}">`:''}<i class="sw" style="background:${p.c||'#ccc'}"></i></div><label>Photo</label><input type="file" accept="image/*" data-f="${k}"><button class="alt" data-rm="${k}" style="margin-top:6px">Remove photo</button></div>
+  <div><div class="row"><div><label>Name</label><input data-k="${k}" data-p="n" value="${esc(p.n)}"></div><div><label>Price 50 ml (LE)</label><input data-k="${k}" data-p="p" inputmode="numeric" value="${p.p||''}"></div>
+  <div><label>Price 30 ml (optional)</label><input data-k="${k}" data-p="s30" inputmode="numeric" value="${p.s30||''}"></div><div><label>Price 100 ml (optional)</label><input data-k="${k}" data-p="s100" inputmode="numeric" value="${p.s100||''}"></div>
+  <div><label>Gender</label><select data-k="${k}" data-p="g">${['Unisex','Masculine','Feminine'].map(x=>`<option ${x==p.g?'selected':''}>${x}</option>`).join('')}</select></div>
+  <div><label>Scent family</label><input data-k="${k}" data-p="f" value="${esc(p.f)}"></div>
+  <div><label>Bottle colour (when no photo)</label><input type="color" data-k="${k}" data-p="c" value="${p.c||'#c98a3a'}"></div>
+  <div><label>Reviews count</label><input data-k="${k}" data-p="rt" inputmode="numeric" value="${p.rt||0}"></div></div>
+  <label>Short line</label><input data-k="${k}" data-p="ch" value="${esc(p.ch)}">
+  <label>Inspired by / reference</label><input data-k="${k}" data-p="i" value="${esc(p.i)}">
+  <label>Description</label><textarea data-k="${k}" data-p="desc">${esc(p.desc)}</textarea>
+  <div class="row"><div><label>Top notes</label><input data-k="${k}" data-n="0" value="${esc((p.notes||[])[0])}"></div><div><label>Heart notes</label><input data-k="${k}" data-n="1" value="${esc((p.notes||[])[1])}"></div><div><label>Base notes</label><input data-k="${k}" data-n="2" value="${esc((p.notes||[])[2])}"></div></div>
+  <label><input type="checkbox" data-k="${k}" data-p="out" ${p.out?'checked':''} style="width:auto"> Sold out</label>
+  <div class="bar" style="margin-top:10px"><button class="alt" data-up="${k}">Move up</button><button class="alt" data-dn="${k}">Move down</button><button class="danger" data-del="${k}">Delete product</button></div></div></div>`;
+  L.appendChild(d)});
+ L.querySelectorAll('[data-p]').forEach(i=>{i.oninput=i.onchange=()=>{const p=D.products[i.dataset.k],f=i.dataset.p;p[f]=i.type=='checkbox'?i.checked:(['p','s30','s100','rt'].includes(f)?(i.value===''?'':+i.value):i.value);if(f=='n'||f=='p'){const h=i.closest('details').querySelector('summary');h.querySelector('h3').textContent=p.n||'New product';h.querySelector('small').textContent='LE '+(p.p||0)+(p.out?' · sold out':'')}}});
+ L.querySelectorAll('[data-n]').forEach(i=>i.oninput=()=>{const p=D.products[i.dataset.k];p.notes=p.notes||['','',''];p.notes[i.dataset.n]=i.value});
+ L.querySelectorAll('[data-f]').forEach(i=>i.onchange=async()=>{const f=i.files[0];if(!f)return;const k=+i.dataset.f;pending[k]=await shrink(f);D.products[k]._new=pending[k];i.closest('details').querySelector('.th').innerHTML=`<img src="${pending[k]}"><i class="sw" style="background:${D.products[k].c}"></i>`;msg('Photo ready. Tap Save to site.')});
+ L.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{const k=+b.dataset.rm;D.products[k].img='';delete D.products[k]._new;delete pending[k];render()});
+ L.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{if(confirm('Delete this product?')){D.products.splice(+b.dataset.del,1);pending={};render()}});
+ L.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>mv(+b.dataset.up,-1));L.querySelectorAll('[data-dn]').forEach(b=>b.onclick=()=>mv(+b.dataset.dn,1))}
+function mv(k,d){const j=k+d;if(j<0||j>=D.products.length)return;[D.products[k],D.products[j]]=[D.products[j],D.products[k]];pending={};D.products.forEach((p,i)=>{if(p._new)pending[i]=p._new});render()}
+const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+function shrink(f){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const m=900,sc=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*sc;c.height=im.height*sc;c.getContext('2d').drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.82))};im.src=r.result};r.readAsDataURL(f)})}
+$('add').onclick=()=>{D.products.push({n:'New product',c:COL[D.products.length%COL.length],f:'Woody',fc:'honey',g:'Unisex',ch:'Short description',i:'',rt:0,p:800,notes:['','',''],desc:'',img:'',out:false});render();const d=$('list').lastChild;d.open=true;d.scrollIntoView()};
+$('conBtn').onclick=()=>{localStorage.ao=$('own').value.trim();localStorage.ar=$('rep').value.trim();localStorage.at=$('tok').value.trim();load()};
+$('dl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(clean(),null,1)],{type:'application/json'}));a.download='products.json';a.click()};
+function clean(){return {store:D.store,products:D.products.map(p=>{const q={...p};delete q._new;return q})}}
+$('save').onclick=async()=>{
+ if(!$('tok').value){msg('Connect first: paste your GitHub token in step 1.',6000);scrollTo(0,0);return}
+ $('save').disabled=true;msg('Saving...',0);
+ try{
+  for(const k of Object.keys(pending)){const p=D.products[k];if(!p)continue;const name='img/'+(p.n||'p').toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+Date.now()+'.jpg';
+   const r=await api('/contents/'+name,{method:'PUT',body:JSON.stringify({message:'Add photo '+name,content:pending[k].split(',')[1]})});if(!r.ok)throw new Error('Photo upload failed ('+r.status+')');p.img=name;delete p._new}
+  pending={};
+  const cur=await api('/contents/products.json');if(cur.ok)sha=(await cur.json()).sha;
+  const r=await api('/contents/products.json',{method:'PUT',body:JSON.stringify({message:'Update products from admin',content:b64(JSON.stringify(clean(),null,1)),sha})});
+  if(!r.ok)throw new Error('Save failed ('+r.status+'). Check the token has Contents: Read and write.');
+  sha=(await r.json()).content.sha;msg('Saved. The store updates in about a minute.',7000);render()
+ }catch(e){msg(e.message,8000)}
+ $('save').disabled=false};
+load();
+</script></body></html>

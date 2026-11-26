@@ -284,7 +284,7 @@ footer:before{content:"";position:absolute;inset:0;background:var(--noise);opaci
 .sv{gap:24px}.pol{padding:30px 0 40px}.po{width:30vw}.fnav{grid-template-columns:repeat(2,minmax(0,1fr))}.fnav>*{min-height:220px}.fnav>:nth-child(2){border-right:0}.fnav>:last-child{grid-column:1/-1;min-height:150px;padding-left:0;border-top:.7px solid rgb(247 245 241/.32)}
 .fbase{flex-direction:column;align-items:flex-start}.fbase nav{margin-left:0}.fb,.fn{padding:34px var(--gut)}.fb{min-height:285px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}.r,.hero .rise{opacity:1;transform:none}}
-</style></head><body>
+.pimg{width:100%;height:100%;object-fit:cover;display:block;border-radius:inherit}.pdp-im .pimg,.pg-im .pimg{object-fit:contain}.pg-btn[disabled]{opacity:.45;cursor:not-allowed}.pg-faq details{border-bottom:1px solid var(--stone,#E0DCD1);padding:16px 0}.pg-faq summary{font-weight:500;cursor:pointer}.pol{max-width:760px}.pol h2{margin:28px 0 8px;font-size:22px}.pol p{line-height:1.7;color:#4b5c58}</style></head><body>
 <div class="stack">
 <div class="ann"><div class="ann-in"><div class="ann-track"><div class="ann-paper"></div>
 <div class="ann-s on">Find your signature scent.</div><div class="ann-s">Free delivery over LE 1,500</div><div class="ann-s">Cash on delivery across Egypt</div>
@@ -322,7 +322,7 @@ footer:before{content:"";position:absolute;inset:0;background:var(--noise);opaci
 <div style="text-align:center;margin-top:10px"><button class="paper rect more wt" id="more"><span class="lbl">Read more reviews</span><span class="lbl">&darr;</span><i class="wet"></i></button><p class="shown" id="shown">Showing 6 of 1,420 reviews</p><div class="note">Published customer reviews. Store reviews are marked separately.</div></div></section>
 <section class="store" id="visit"><div class="store-in r"><div class="sm" id="room"><div class="stamp">Smell before you choose</div></div>
 <div class="sc"><div><p class="e">Visit Ateeq</p><h2>Try our fragrances in store</h2><p class="lede">Visit us, test your favourites and choose the right fragrance for you.</p></div>
-<div><address><span>Find us</span><strong>Your store address here, Cairo</strong></address><a class="dir" href="#visit">Open directions <span>&#8599;</span></a></div></div></div></section>
+<div><address><span>Find us</span><strong>${ST.address||'Your store address here, Cairo'}</strong></address><a class="dir" href="#visit">Open directions <span>&#8599;</span></a></div></div></div></section>
 </main>
 <main id="pgv" style="display:none"></main>
 <footer><div class="ftop"></div><div class="fl"><div class="fb"><a class="logo" href="#/home"><b>A<i>T</i>EEQ</b><small>عتيق</small></a><h2>Stay in touch with Ateeq.</h2></div>
@@ -336,10 +336,11 @@ footer:before{content:"";position:absolute;inset:0;background:var(--noise);opaci
 <div class="fr" id="fr"></div><div class="lines" id="lines"></div>
 <div class="dr-f"><div class="sub2"><span>Subtotal</span><span id="sub">LE 0.00</span></div><small>Shipping calculated at checkout.</small><button class="paper dark rect ck wt" id="ck"><span class="lbl">Checkout</span><i class="wet"></i></button></div></aside>
 <div class="toast" id="toast"></div>
+<script>(function(){try{var x=new XMLHttpRequest();x.open('GET','products.json?v='+Date.now(),false);x.send();if(x.status==200)window.__D=JSON.parse(x.responseText)}catch(e){}})()</script>
 <script>
 const $=i=>document.getElementById(i),q=(s,r=document)=>[...r.querySelectorAll(s)];
 let gid=0;
-function bottle(name,liq){const id='g'+(gid++);return `<svg viewBox="0 0 200 290" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".5" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#fff" stop-opacity=".55"/></linearGradient><linearGradient id="${id}c" x1="0" x2="1"><stop offset="0" stop-color="#3a4d49"/><stop offset=".3" stop-color="#1b2725"/><stop offset="1" stop-color="#0e1514"/></linearGradient></defs>
+function bottle(name,liq){if(window.PIMG&&PIMG[name])return '<img class="pimg" src="'+PIMG[name]+'" alt="'+name+'" loading="lazy">';const id='g'+(gid++);return `<svg viewBox="0 0 200 290" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".5" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#fff" stop-opacity=".55"/></linearGradient><linearGradient id="${id}c" x1="0" x2="1"><stop offset="0" stop-color="#3a4d49"/><stop offset=".3" stop-color="#1b2725"/><stop offset="1" stop-color="#0e1514"/></linearGradient></defs>
 <rect x="64" y="6" width="72" height="74" rx="3" fill="url(#${id}c)"/><rect x="64" y="6" width="72" height="5" fill="#fff" opacity=".1"/>
 <rect x="84" y="80" width="32" height="14" fill="#cfd6d3" opacity=".7"/>
 <rect x="22" y="94" width="156" height="190" rx="9" fill="#e6ebe9" fill-opacity=".55" stroke="#9fb0ab" stroke-width="1.2"/>
@@ -350,11 +351,11 @@ function bottle(name,liq){const id='g'+(gid++);return `<svg viewBox="0 0 200 290
 <text x="100" y="164" text-anchor="middle" font-family="Cairo,sans-serif" font-size="9" fill="#F7F5F1" opacity=".8">عتيق</text>
 <text x="100" y="197" text-anchor="middle" font-family="Georgia,serif" font-style="italic" font-size="${name.length>9?15:19}" fill="#F7F5F1">${name}</text>
 <text x="100" y="226" text-anchor="middle" font-family="Poppins,sans-serif" font-size="6.5" letter-spacing="1.6" fill="#F7F5F1" opacity=".85">EXTRAIT DE PARFUM</text></svg>`}
-const P=[{n:"Amber Oud",c:"#c98a3a",f:"Warm sweet",fc:"honey",g:"Unisex",ch:"Amber, oud, vanilla. Warm and long lasting",i:"House One · Reference 01",rt:115,p:650},
+const D=window.__D||{store:{},products:null};const ST=D.store||{};const P=(D.products||[{n:"Amber Oud",c:"#c98a3a",f:"Warm sweet",fc:"honey",g:"Unisex",ch:"Amber, oud, vanilla. Warm and long lasting",i:"House One · Reference 01",rt:115,p:650},
 {n:"Noir Velvet",c:"#6a2a3a",f:"Leather",fc:"sky",g:"Masculine",ch:"Leather, rose and musk with a dark finish",i:"House Two · Reference 02",rt:84,p:1100},
 {n:"Citrus Mirage",c:"#b9c75a",f:"Marine",fc:"sky",g:"Unisex",ch:"Citrus, marine and woody with elegant depth",i:"Ateeq original composition",rt:67,p:1100},
 {n:"Midnight Rose",c:"#b0607a",f:"Gourmand",fc:"honey",g:"Feminine",ch:"Rose, patchouli and saffron. Rich and soft",i:"House Three · Reference 03",rt:41,p:700},
-{n:"Desert Musk",c:"#d9c28a",f:"Warm spicy",fc:"honey",g:"Masculine",ch:"Spice, musk and cedar. Quiet confidence",i:"House Four · Reference 04",rt:58,p:1150}];
+{n:"Desert Musk",c:"#d9c28a",f:"Warm spicy",fc:"honey",g:"Masculine",ch:"Spice, musk and cedar. Quiet confidence",i:"House Four · Reference 04",rt:58,p:1150}]);window.PIMG={};P.forEach(p=>{if(p.img)PIMG[p.n]=p.img});
 const star='<svg viewBox="0 0 12 12"><path d="M6 .6l1.6 3.5 3.8.4-2.9 2.6.8 3.7L6 8.8 2.7 10.8l.8-3.7L.6 4.5l3.8-.4z"/></svg>';
 const stars=star.repeat(5);$('sst').innerHTML=stars;
 const mult={30:.65,50:1,100:1.8};
@@ -372,7 +373,7 @@ const tr=$('track');function upd(){$('pv').disabled=tr.scrollLeft<4;$('nx').disa
 const step=()=>tr.querySelector('.card').offsetWidth+16;
 $('pv').onclick=()=>tr.scrollBy({left:-step()});$('nx').onclick=()=>tr.scrollBy({left:step()});tr.onscroll=upd;addEventListener('resize',upd);upd();
 $('nt').onclick=function(){const on=this.getAttribute('aria-pressed')!=='true';this.setAttribute('aria-pressed',on);q('.card').forEach(c=>c.dataset.notes=on)};
-let cart=[];const FREE=1500;
+let cart=[];const FREE=+(ST.freeFrom||1500);
 function draw(){const n=cart.reduce((a,l)=>a+l.q,0),s=cart.reduce((a,l)=>a+l.q*l.pr,0);$('bc').textContent=n;
 $('sub').textContent=fmt(s);$('fr').innerHTML=(s>=FREE?'You have free delivery.':`Add ${fmt(FREE-s)} more for free delivery.`)+`<div class="bar"><i style="width:${Math.min(100,s/FREE*100)}%"></i></div>`;
 $('lines').innerHTML=cart.length?cart.map((l,i)=>`<div class="ln"><div class="th">${bottle(l.n,l.c)}</div><div><b>${l.n}</b><small>${l.sz} ml</small><div class="qt"><button onclick="qty(${i},-1)">&minus;</button><span>${l.q}</span><button onclick="qty(${i},1)">+</button></div></div><div style="text-align:right;font-size:13px">${fmt(l.pr*l.q)}<button class="rm" onclick="qty(${i},-99)">Remove</button></div></div>`).join(''):'<div class="empty">Your bag is empty.</div>'}
@@ -415,9 +416,9 @@ if(document.readyState==='complete')setTimeout(go,300);else addEventListener('lo
 const NOTES={"Amber Oud":[["Top","Bergamot, saffron"],["Heart","Amber, oud, rose"],["Base","Vanilla, musk, sandalwood"]],"Noir Velvet":[["Top","Pink pepper, cardamom"],["Heart","Leather, rose"],["Base","Musk, patchouli"]],"Citrus Mirage":[["Top","Lemon, grapefruit"],["Heart","Sea salt, jasmine"],["Base","Cedar, white musk"]],"Midnight Rose":[["Top","Saffron, pear"],["Heart","Rose, patchouli"],["Base","Amber, praline"]],"Desert Musk":[["Top","Cardamom, cinnamon"],["Heart","Musk, incense"],["Base","Cedar, tonka"]]};
 const slug=n=>n.toLowerCase().replace(/ /g,'-');
 const pv=$('pgv');
-const sized=(p,s)=>Math.round(p.p*mult[s]/10)*10;
+const sized=(p,s)=>p['s'+s]?+p['s'+s]:(s==50?+p.p:Math.round(p.p*mult[s]/10)*10);
 const btn=(id,label,cls='')=>`<button class="paper dark rect wt pg-btn ${cls}" ${id}><span class="lbl">${label}</span><i class="wet"></i></button>`;
-function cardH(p,k){return `<article class="pg-card"><a href="#/product/${slug(p.n)}" class="pg-im"><span class="fmt">50 ml</span>${bottle(p.n,p.c)}</a><div class="pg-cb"><h3><a href="#/product/${slug(p.n)}">${p.n}</a></h3><div class="tags"><span class="tg ${p.fc}">${p.f}</span><span class="tg g">${p.g}</span></div><div class="rv"><span class="st">${stars}</span><small>${p.rt} reviews</small></div><div class="pg-pr">From <strong>${fmt(sized(p,30))}</strong></div>${btn(`data-quick="${k}"`,'Quick add')}</div></article>`}
+function cardH(p,k){return `<article class="pg-card"><a href="#/product/${slug(p.n)}" class="pg-im"><span class="fmt">50 ml</span>${bottle(p.n,p.c)}</a><div class="pg-cb"><h3><a href="#/product/${slug(p.n)}">${p.n}</a></h3><div class="tags"><span class="tg ${p.fc}">${p.f}</span><span class="tg g">${p.g}</span></div><div class="rv"><span class="st">${stars}</span><small>${p.rt} reviews</small></div><div class="pg-pr">From <strong>${fmt(sized(p,30))}</strong></div>${p.out?btn('disabled','Sold out'):btn(`data-quick="${k}"`,'Quick add')}</div></article>`}
 function addToCart(k,sz,q=1){const p=P[k],pr=sized(p,sz);const f=cart.find(l=>l.n==p.n&&l.sz==sz);f?f.q+=q:cart.push({n:p.n,c:p.c,sz,pr,q});draw();toast(p.n+' added to your bag')}
 const crumbs=a=>`<nav class="pg-cr"><a href="#">Home</a>${a.map(x=>x[1]?` / <a href="${x[1]}">${x[0]}</a>`:` / <span>${x[0]}</span>`).join('')}</nav>`;
 const views={
@@ -425,14 +426,14 @@ collection(arg){const g=arg||'All';let list=P.filter(p=>g=='All'||p.g==g);
 return `<section class="pg-w">${crumbs([['Shop all']])}<div class="pg-h"><div><p class="mono">${list.length} fragrances</p><h1>Shop all</h1><p class="pg-lede">Long-lasting extrait de parfum in 30, 50 and 100 ml.</p></div></div>
 <div class="pg-bar"><div class="chips">${['All','Masculine','Feminine','Unisex'].map(x=>`<a class="chip ${x==g?'on':''}" href="#/collection${x=='All'?'':'/'+x}">${x}</a>`).join('')}</div><label class="srt">Sort <select id="srt"><option value="f">Featured</option><option value="lo">Price, low to high</option><option value="hi">Price, high to low</option><option value="r">Most reviewed</option></select></label></div>
 <div class="pg-grid" id="pgg">${list.map(p=>cardH(p,P.indexOf(p))).join('')}</div></section>`},
-product(arg){const k=P.findIndex(p=>slug(p.n)==arg);if(k<0)return views.collection();const p=P[k],nt=NOTES[p.n];
+product(arg){const k=P.findIndex(p=>slug(p.n)==arg);if(k<0)return views.collection();const p=P[k],nt=p.notes?[['Top',p.notes[0]||''],['Heart',p.notes[1]||''],['Base',p.notes[2]||'']]:(NOTES[p.n]||[]);
 return `<section class="pg-w">${crumbs([['Shop all','#/collection'],[p.n]])}<div class="pdp"><div class="pdp-im">${bottle(p.n,p.c)}<span class="fmt">50 ml</span></div>
 <div class="pdp-in"><p class="mono">${p.g} / ${p.f}</p><h1>${p.n}</h1><div class="rv"><span class="st">${stars}</span><small>${p.rt} reviews</small></div><p class="pg-lede">${p.ch}.</p><p class="insp">Inspired by<b>${p.i}</b></p>
 <fieldset class="vr" style="border:0;padding:0;margin:14px 0">${[30,50,100].map(s=>`<label><input type="radio" name="psz" value="${s}" ${s==50?'checked':''}><span>${s} ml</span></label>`).join('')}</fieldset>
-<div class="pdp-pr">Price <strong id="ppr">${fmt(p.p)}</strong></div><div class="pdp-q"><div class="qt"><button id="qm">&minus;</button><span id="qn">1</span><button id="qp">+</button></div>${btn('id="padd"','Add to bag')}</div>
-<p class="pdp-s">Free delivery over LE 1,500. Cash on delivery across Egypt.</p>
+<div class="pdp-pr">Price <strong id="ppr">${fmt(p.p)}</strong></div><div class="pdp-q"><div class="qt"><button id="qm">&minus;</button><span id="qn">1</span><button id="qp">+</button></div>${p.out?btn('disabled','Sold out'):btn('id="padd"','Add to bag')}</div>
+<p class="pdp-s">Free delivery over LE 1,500. Cash on delivery across Egypt. <a href="#/shipping">Shipping and returns</a> · <a href="#/faq">FAQ</a></p>
 <details open><summary>Fragrance notes</summary><div class="nt3">${nt.map(n=>`<div><small>${n[0]}</small><b>${n[1]}</b></div>`).join('')}</div></details>
-<details><summary>Details</summary><p>Extrait de parfum, long lasting. Placeholder description: replace with the real product copy.</p></details>
+<details><summary>Details</summary><p>${p.desc||'Extrait de parfum, long lasting. Placeholder description: replace with the real product copy.'}</p></details>
 <details><summary>Delivery and returns</summary><p>Placeholder policy text. Delivery in 2 to 4 working days across Egypt.</p></details></div></div>
 <div class="pg-rel"><h2>You may also like</h2><div class="pg-grid">${P.filter((_,i)=>i!=k).slice(0,4).map(x=>cardH(x,P.indexOf(x))).join('')}</div></div></section>`},
 cart(){const s=cart.reduce((a,l)=>a+l.q*l.pr,0);
@@ -443,10 +444,12 @@ checkout(){const s=cart.reduce((a,l)=>a+l.q*l.pr,0),sh=s>=FREE||!s?0:60;
 return `<section class="pg-w pg-co">${crumbs([['Your bag','#/cart'],['Checkout']])}<h1>Checkout</h1><div class="co-g"><form id="cof" class="co-f"><h2>Contact</h2><label>Email or phone<input required placeholder="name@email.com"></label>
 <h2>Delivery</h2><div class="two"><label>First name<input required></label><label>Last name<input required></label></div><label>Address<input required></label><div class="two"><label>City<input required></label><label>Governorate<select><option>Cairo</option><option>Giza</option><option>Alexandria</option><option>Beni Suef</option><option>Other</option></select></label></div><label>Phone<input required inputmode="tel"></label>
 <h2>Payment</h2><label class="rad"><input type="radio" name="pay" checked> Cash on delivery</label><label class="rad off"><input type="radio" name="pay" disabled> Card (not connected in this demo)</label>
-${btn('type="submit"','Place order','full')}<p class="pdp-s">Design demo. No real order is placed and no payment is taken.</p></form>
+${btn('type="submit"','Place order','full')}<p class="pdp-s">Your order is sent to the store on WhatsApp. Pay cash on delivery.</p></form>
 <aside class="co-s"><h2>Summary</h2>${cart.length?cart.map(l=>`<div class="ln sm"><div class="th">${bottle(l.n,l.c)}</div><div><b>${l.n}</b><small>${l.sz} ml x ${l.q}</small></div><div>${fmt(l.pr*l.q)}</div></div>`).join(''):'<p>Your bag is empty.</p>'}<div class="sub2"><span>Subtotal</span><span>${fmt(s)}</span></div><div class="sub2"><span>Shipping</span><span>${sh?fmt(sh):'Free'}</span></div><div class="sub2 tt"><span>Total</span><span>${fmt(s+sh)}</span></div></aside></div></section>`},
-thanks(){return `<section class="pg-w pg-nar" style="text-align:center;padding:90px 0"><p class="mono">Order received (demo)</p><h1>Thank you.</h1><p class="pg-lede" style="margin:0 auto 24px">This is a design demo, so no order was placed. In the real store this page confirms the order.</p><a class="pg-link" href="#/collection">Back to shop</a></section>`},
-contact(){return `<section class="pg-w">${crumbs([['Contact']])}<div class="ct-g"><div><p class="mono">Get in touch</p><h1>Contact Ateeq</h1><p class="pg-lede">Questions about a fragrance, an order or a gift? Send us a message.</p><address class="ct-a"><span>WhatsApp</span><strong>+20 000 000 0000 (placeholder)</strong><span>Email</span><strong>hello@ateeq.example (placeholder)</strong><span>Store</span><strong>Your store address here, Cairo</strong><span>Hours</span><strong>Daily, 11 AM to 10 PM (placeholder)</strong></address></div>
+faq(){const q=[['How long does delivery take?','2 to 4 working days across Egypt. Placeholder text.'],['Can I pay on delivery?','Yes, cash on delivery is available everywhere we deliver.'],['How long does the scent last?','Extrait de parfum is concentrated, so it typically lasts many hours. Placeholder text.'],['Can I return a fragrance?','Unopened bottles can be returned within 14 days. Placeholder policy.'],['Do you sell gift sets?','Ask us on WhatsApp and we will put one together.']];return `<section class="pg-w pg-nar pg-faq">${crumbs([['FAQ']])}<h1>Questions</h1>${q.map(x=>`<details><summary>${x[0]}</summary><p class="pg-lede">${x[1]}</p></details>`).join('')}</section>`},
+shipping(){return `<section class="pg-w pol">${crumbs([['Shipping and returns']])}<h1>Shipping and returns</h1><h2>Delivery</h2><p>Placeholder policy. We deliver across Egypt in 2 to 4 working days. Delivery is free over LE ${FREE.toLocaleString('en-US')}, otherwise a flat fee applies.</p><h2>Payment</h2><p>Cash on delivery. More payment methods can be added later.</p><h2>Returns</h2><p>Unopened bottles can be returned within 14 days. Placeholder policy text, replace with your real terms.</p><h2>Privacy</h2><p>We only use your details to deliver your order.</p></section>`},
+thanks(){return `<section class="pg-w pg-nar" style="text-align:center;padding:90px 0"><p class="mono">Order received</p><h1>Thank you.</h1><p class="pg-lede" style="margin:0 auto 24px">This is a design demo, so no order was placed. In the real store this page confirms the order.</p><a class="pg-link" href="#/collection">Back to shop</a></section>`},
+contact(){return `<section class="pg-w">${crumbs([['Contact']])}<div class="ct-g"><div><p class="mono">Get in touch</p><h1>Contact Ateeq</h1><p class="pg-lede">Questions about a fragrance, an order or a gift? Send us a message.</p><address class="ct-a"><span>WhatsApp</span><strong>${ST.phone||'+20 000 000 0000 (placeholder)'}</strong><span>Email</span><strong>${ST.email||'hello@ateeq.example (placeholder)'}</strong><span>Store</span><strong>${ST.address||'Your store address here, Cairo'}</strong><span>Hours</span><strong>${ST.hours||'Daily, 11 AM to 10 PM (placeholder)'}</strong></address></div>
 <form class="co-f" id="ctf"><label>Name<input required></label><label>Email<input type="email" required></label><label>Message<textarea rows="6" required></textarea></label>${btn('type="submit"','Send message','full')}</form></div></section>`},
 about(){return `<section class="pg-w">${crumbs([['About']])}<div class="ab-h"><p class="mono">Our story</p><h1>Fragrance made to last.</h1><p class="pg-lede">Ateeq (عتيق) means timeless. We make long-lasting extrait de parfum for every day, nights out and special moments. Placeholder story: replace with the real brand text.</p></div>
 <div class="ab-g"><div><b>01</b><h3>Concentrated</h3><p>Extrait strength for hours of wear.</p></div><div><b>02</b><h3>Honest prices</h3><p>Premium scents without the premium markup.</p></div><div><b>03</b><h3>Made for Egypt</h3><p>Cash on delivery and fast shipping across the country.</p></div></div>
@@ -457,10 +460,10 @@ const [name,...rest]=h.slice(2).split('/');const arg=decodeURIComponent(rest.joi
 function bindPg(name){
 q('[data-quick]',pv).forEach(b=>b.onclick=()=>addToCart(+b.dataset.quick,30));
 const s=$('srt');if(s)s.onchange=()=>{const g=q('.pg-card',pv);const arr=[...$('pgg').children];const f={lo:(a,b)=>pr(a)-pr(b),hi:(a,b)=>pr(b)-pr(a),r:(a,b)=>rv(b)-rv(a),f:()=>0};const pr=e=>+e.querySelector('.pg-pr strong').textContent.replace(/[^\d.]/g,''),rv=e=>parseInt(e.querySelector('small').textContent);if(s.value!='f')arr.sort(f[s.value]);arr.forEach(e=>$('pgg').appendChild(e))};
-if(name=='product'){const k=P.findIndex(p=>slug(p.n)==location.hash.split('/')[2]);let n=1;const pp=P[k];const sz=()=>+q('input[name=psz]:checked',pv)[0].value;q('input[name=psz]',pv).forEach(r=>r.onchange=()=>$('ppr').textContent=fmt(sized(pp,sz())));$('qm').onclick=()=>{n=Math.max(1,n-1);$('qn').textContent=n};$('qp').onclick=()=>{n++;$('qn').textContent=n};$('padd').onclick=()=>{addToCart(k,sz(),n);setTimeout(()=>openP('dr'),500)}}
+if(name=='product'){const k=P.findIndex(p=>slug(p.n)==location.hash.split('/')[2]);let n=1;const pp=P[k];const sz=()=>+q('input[name=psz]:checked',pv)[0].value;q('input[name=psz]',pv).forEach(r=>r.onchange=()=>$('ppr').textContent=fmt(sized(pp,sz())));$('qm').onclick=()=>{n=Math.max(1,n-1);$('qn').textContent=n};$('qp').onclick=()=>{n++;$('qn').textContent=n};if($('padd'))$('padd').onclick=()=>{addToCart(k,sz(),n);setTimeout(()=>openP('dr'),500)}}
 q('[data-q]',pv).forEach(b=>b.onclick=()=>{const[i,d]=b.dataset.q.split(',').map(Number);qty(i,d);route()});
 q('[data-go]',pv).forEach(b=>b.onclick=()=>location.hash=b.dataset.go);
-const cf=$('cof');if(cf)cf.onsubmit=e=>{e.preventDefault();location.hash='#/thanks'};
+const cf=$('cof');if(cf)cf.onsubmit=e=>{e.preventDefault();const wa=(ST.whatsapp||'').replace(/\D/g,'');if(wa&&cart.length){const f=[...cf.querySelectorAll('input:not([type=radio]),select')].map(x=>x.value);const sub=cart.reduce((a,l)=>a+l.q*l.pr,0);const msg='New order\n'+cart.map(l=>l.q+' x '+l.n+' '+l.sz+'ml = '+fmt(l.q*l.pr)).join('\n')+'\nSubtotal: '+fmt(sub)+'\nName: '+f[1]+' '+f[2]+'\nAddress: '+f[3]+', '+f[4]+', '+f[5]+'\nPhone: '+f[6]+'\nContact: '+f[0]+'\nPayment: Cash on delivery';cart.length=0;draw();location.hash='#/thanks';window.open('https://wa.me/'+wa+'?text='+encodeURIComponent(msg),'_blank')}else location.hash='#/thanks'};
 const ct=$('ctf');if(ct)ct.onsubmit=e=>{e.preventDefault();toast('Message sent (demo)');ct.reset()};
 }
 $('ck').onclick=()=>{closeAll();location.hash='#/checkout'};
