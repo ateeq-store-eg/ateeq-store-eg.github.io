@@ -89,7 +89,7 @@ $('save').onclick=async()=>{
  if(!$('tok').value){msg('Connect first: paste your GitHub token in step 1.',6000);scrollTo(0,0);return}
  $('save').disabled=true;msg('Saving...',0);
  try{
-  for(const k of Object.keys(pending)){const p=D.products[k];if(!p)continue;const name='img/'+(p.n||'p').toLowerCase().replace(/[^a-z0-9]+/g,'-')+'-'+Date.now()+'.jpg';
+  for(const k of Object.keys(pending)){const p=D.products[k];if(!p)continue;const name='img/'+((p.n||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'photo')+'-'+Date.now()+'.jpg';
    const r=await api('/contents/'+name,{method:'PUT',body:JSON.stringify({message:'Add photo '+name,content:pending[k].split(',')[1]})});if(!r.ok)throw new Error('Photo upload failed ('+r.status+')');p.img=name;delete p._new}
   pending={};
   const cur=await api('/contents/products.json');if(cur.ok)sha=(await cur.json()).sha;
