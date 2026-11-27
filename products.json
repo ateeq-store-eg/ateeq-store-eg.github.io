@@ -10,28 +10,27 @@
  },
  "products": [
   {
-   "n": "عود البطل ",
+   "n": "عطر الشحس",
    "c": "#ffffff",
    "f": "Warm sweet",
    "fc": "honey",
    "g": "Masculine",
    "ch": "Amber, oud, vanilla. Warm and long lasting",
-   "i": "House One · colonia 777",
+   "i": "رائحة الكبده وشرائح البيتزا",
    "rt": 32,
    "p": 650,
    "notes": [
-    "Bergamot, saffron",
+    "التونه، البيض المسلوق، البلح البرحي",
     "Amber, oud, rose",
     "Vanilla, musk, sandalwood"
    ],
-   "desc": "شوية ريحه فاجرين",
-   "img": "img/pmwy8yc121.png",
+   "desc": "شوية بارفان من ايام الزمن الجميل، مزيج بين ريحة الكبده مع التقليه وشرائح البيتزا المتسخنه في الميكرويف، الجوع مش هيسيبك",
+   "img": "img/pmwyvoxwk0.jpg",
    "out": false,
    "s30": 320,
    "s100": 1350,
    "imgs": [
-    "img/pmwy8yc121.png",
-    "img/pmwy8yc120.png"
+    "img/pmwyvoxwk0.jpg"
    ],
    "arc": "Made by mohamed Osama "
   },
