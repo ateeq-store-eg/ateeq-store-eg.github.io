@@ -24,6 +24,7 @@ small,.hint{color:#5d706b;font-size:13px}
 @media(max-width:560px){.pc{grid-template-columns:1fr}.th{width:100%}}
 </style></head><body>
 <header><b>ATEEQ ADMIN</b><span class="bar"><a href="./" target="_blank">View store</a><button id="save">Save to site</button></span></header>
+<div id="st" style="display:none;position:sticky;top:58px;z-index:4;padding:12px 18px;font-weight:500"></div>
 <main>
 <div class="card" id="conn"><h2>1. Connect (one time on this device)</h2>
 <p class="hint">Saving needs a GitHub access token. It is stored only in this browser and goes only to GitHub. Create one at <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">github.com/settings/personal-access-tokens/new</a>: pick this repository only, and set Repository permissions, Contents: Read and write. Paste it here and tap Connect. Anyone opening this page without the token can look but cannot change anything.</p>
@@ -40,7 +41,8 @@ small,.hint{color:#5d706b;font-size:13px}
 <p class="hint">After tapping Save to site, the live store updates in about one minute. Prices: "Price 50 ml" is the main price. Leave 30 ml and 100 ml empty to calculate them automatically (65% and 180%).</p>
 </main><div id="msg"></div>
 <script>
-const $=i=>document.getElementById(i);let D={store:{},products:[]},sha=null,pending={};
+const $=i=>document.getElementById(i);let D={store:{},products:[]},sha=null,pending={},local={};
+const stat=(t,kind)=>{const e=$('st');e.style.display='block';e.style.background=kind=='err'?'#8a3a3a':kind=='ok'?'#2f6b4f':'#344945';e.style.color='#fff';e.textContent=t};
 const host=location.hostname,isGh=host.endsWith('.github.io');
 $('own').value=localStorage.ao||(isGh?host.split('.')[0]:'');$('rep').value=localStorage.ar||(isGh?host:'');$('tok').value=localStorage.at||'';
 const msg=(t,ms=4000)=>{const m=$('msg');m.textContent=t;m.style.display='block';clearTimeout(m._t);if(ms)m._t=setTimeout(()=>m.style.display='none',ms)};
@@ -48,15 +50,15 @@ const api=(p,o={})=>fetch('https://api.github.com/repos/'+$('own').value.trim()+
 const b64=s=>btoa(unescape(encodeURIComponent(s)));
 const COL=['#c98a3a','#6a2a3a','#b9c75a','#b0607a','#d9c28a','#344945','#7aa2b3'];
 async function load(){
- try{if($('tok').value){const r=await api('/contents/products.json');if(r.ok){const j=await r.json();sha=j.sha;D=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,'')))));$('cs').textContent='Connected. Loaded from GitHub.';render();return}
- $('cs').textContent='Token or repository not accepted ('+r.status+'). Showing the public copy (read only).'}}catch(e){}
+ try{if($('tok').value){const r=await api('/contents/products.json');if(r.ok){const j=await r.json();sha=j.sha;D=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,'')))));$('cs').textContent='Connected. Loaded from GitHub.';stat('Connected. Changes you make here are saved with the Save to site button.','ok');render();return}
+ $('cs').textContent='Token or repository not accepted ('+r.status+'). Showing the public copy (read only).';stat('NOT connected: token or repository not accepted ('+r.status+'). You can look but not save.','err')}}catch(e){}
  try{const r=await fetch('products.json?v='+Date.now());D=await r.json()}catch(e){msg('Could not load products.json')}
  render()}
 function render(){
  document.querySelectorAll('[data-s]').forEach(i=>{i.value=(D.store||{})[i.dataset.s]||'';i.oninput=()=>{D.store=D.store||{};D.store[i.dataset.s]=i.value}});
  const L=$('list');L.innerHTML='';
  D.products.forEach((p,k)=>{const d=document.createElement('details');d.className='card pc';d.style.display='block';d.style.margin='0 0 10px';
-  const src=pending[k]||p.img||'';
+  const src=pending[k]||local[p.img]||p.img||'';
   d.innerHTML=`<summary><h3>${esc(p.n||'New product')}</h3><small>LE ${p.p||0}${p.out?' · sold out':''}</small></summary>
   <div class="pc" style="margin-top:12px"><div><div class="th">${src?`<img src="${src}">`:''}<i class="sw" style="background:${p.c||'#ccc'}"></i></div><label>Photo</label><input type="file" accept="image/*" data-f="${k}"><button class="alt" data-rm="${k}" style="margin-top:6px">Remove photo</button></div>
   <div><div class="row"><div><label>Name</label><input data-k="${k}" data-p="n" value="${esc(p.n)}"></div><div><label>Price 50 ml (LE)</label><input data-k="${k}" data-p="p" inputmode="numeric" value="${p.p||''}"></div>
@@ -74,8 +76,8 @@ function render(){
   L.appendChild(d)});
  L.querySelectorAll('[data-p]').forEach(i=>{i.oninput=i.onchange=()=>{const p=D.products[i.dataset.k],f=i.dataset.p;p[f]=i.type=='checkbox'?i.checked:(['p','s30','s100','rt'].includes(f)?(i.value===''?'':+i.value):i.value);if(f=='n'||f=='p'){const h=i.closest('details').querySelector('summary');h.querySelector('h3').textContent=p.n||'New product';h.querySelector('small').textContent='LE '+(p.p||0)+(p.out?' · sold out':'')}}});
  L.querySelectorAll('[data-n]').forEach(i=>i.oninput=()=>{const p=D.products[i.dataset.k];p.notes=p.notes||['','',''];p.notes[i.dataset.n]=i.value});
- L.querySelectorAll('[data-f]').forEach(i=>i.onchange=async()=>{const f=i.files[0];if(!f)return;const k=+i.dataset.f;pending[k]=await shrink(f);D.products[k]._new=pending[k];i.closest('details').querySelector('.th').innerHTML=`<img src="${pending[k]}"><i class="sw" style="background:${D.products[k].c}"></i>`;msg('Photo ready. Tap Save to site.')});
- L.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{const k=+b.dataset.rm;D.products[k].img='';delete D.products[k]._new;delete pending[k];render()});
+ L.querySelectorAll('[data-f]').forEach(i=>i.onchange=async()=>{const f=i.files[0];if(!f)return;const k=+i.dataset.f;pending[k]=await shrink(f);D.products[k]._new=pending[k];i.closest('details').querySelector('.th').innerHTML=`<img src="${pending[k]}"><i class="sw" style="background:${D.products[k].c}"></i>`;stat('Photo chosen. It is not on the site yet: tap Save to site (top right).','info');msg('Photo ready. Tap Save to site.')});
+ L.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{if(!confirm('Remove this photo?'))return;const k=+b.dataset.rm;D.products[k].img='';delete D.products[k]._new;delete pending[k];render()});
  L.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{if(confirm('Delete this product?')){D.products.splice(+b.dataset.del,1);pending={};render()}});
  L.querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>mv(+b.dataset.up,-1));L.querySelectorAll('[data-dn]').forEach(b=>b.onclick=()=>mv(+b.dataset.dn,1))}
 function mv(k,d){const j=k+d;if(j<0||j>=D.products.length)return;[D.products[k],D.products[j]]=[D.products[j],D.products[k]];pending={};D.products.forEach((p,i)=>{if(p._new)pending[i]=p._new});render()}
@@ -85,18 +87,30 @@ $('add').onclick=()=>{D.products.push({n:'New product',c:COL[D.products.length%C
 $('conBtn').onclick=()=>{localStorage.ao=$('own').value.trim();localStorage.ar=$('rep').value.trim();localStorage.at=$('tok').value.trim();load()};
 $('dl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(clean(),null,1)],{type:'application/json'}));a.download='products.json';a.click()};
 function clean(){return {store:D.store,products:D.products.map(p=>{const q={...p};delete q._new;return q})}}
+const J=async(p,o)=>{const r=await api(p,o);let j=null;try{j=await r.json()}catch(e){}if(!r.ok)throw new Error((j&&j.message?j.message:'error')+' ('+r.status+')');return j};
+const post=(p,b,m='POST')=>J(p,{method:m,body:JSON.stringify(b)});
 $('save').onclick=async()=>{
- if(!$('tok').value){msg('Connect first: paste your GitHub token in step 1.',6000);scrollTo(0,0);return}
- $('save').disabled=true;msg('Saving...',0);
+ if(!$('tok').value){stat('Not connected. Paste your GitHub token in step 1 and tap Connect, then Save.','err');scrollTo(0,0);return}
+ $('save').disabled=true;stat('Saving... please wait','info');
  try{
-  for(const k of Object.keys(pending)){const p=D.products[k];if(!p)continue;const name='img/'+((p.n||'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'photo')+'-'+Date.now()+'.jpg';
-   const r=await api('/contents/'+name,{method:'PUT',body:JSON.stringify({message:'Add photo '+name,content:pending[k].split(',')[1]})});if(!r.ok)throw new Error('Photo upload failed ('+r.status+')');p.img=name;delete p._new}
-  pending={};
-  const cur=await api('/contents/products.json');if(cur.ok)sha=(await cur.json()).sha;
-  const r=await api('/contents/products.json',{method:'PUT',body:JSON.stringify({message:'Update products from admin',content:b64(JSON.stringify(clean(),null,1)),sha})});
-  if(!r.ok)throw new Error('Save failed ('+r.status+'). Check the token has Contents: Read and write.');
-  sha=(await r.json()).content.sha;msg('Saved. The store updates in about a minute.',7000);render()
- }catch(e){msg(e.message,8000)}
+  const keys=Object.keys(pending);const files=[];
+  for(const k of keys){const p=D.products[k];if(!p)continue;const nm='img/p'+Date.now().toString(36)+k+'.jpg';files.push({path:nm,k,data:pending[k]})}
+  stat('Saving... step 1 of 3 (reading the repository)','info');
+  const ref=await J('/git/ref/heads/main');const head=ref.object.sha;const hc=await J('/git/commits/'+head);
+  const tree=[];
+  for(const f of files){stat('Saving... uploading photo '+(files.indexOf(f)+1)+' of '+files.length,'info');const bl=await post('/git/blobs',{content:f.data.split(',')[1],encoding:'base64'});tree.push({path:f.path,mode:'100644',type:'blob',sha:bl.sha});D.products[f.k].img=f.path;local[f.path]=f.data;delete D.products[f.k]._new}
+  const json=JSON.stringify(clean(),null,1);
+  const jb=await post('/git/blobs',{content:json,encoding:'utf-8'});tree.push({path:'products.json',mode:'100644',type:'blob',sha:jb.sha});
+  stat('Saving... step 3 of 3 (publishing)','info');
+  const nt=await post('/git/trees',{base_tree:hc.tree.sha,tree});
+  const nc=await post('/git/commits',{message:'Update store from admin',tree:nt.sha,parents:[head]});
+  await post('/git/refs/heads/main',{sha:nc.sha,force:false},'PATCH');
+  pending={};render();
+  stat('Saved to GitHub at '+new Date().toLocaleTimeString()+'. Waiting for the live store to update (1 to 3 minutes)...','ok');
+  const want=json.length;let live=false;
+  for(let i=0;i<24&&!live;i++){await new Promise(r=>setTimeout(r,8000));try{const t=await (await fetch('products.json?v='+Date.now(),{cache:'no-store'})).text();if(t.length==want){live=true}}catch(e){}}
+  stat(live?'Saved and LIVE. The store now shows your changes (refresh the store page).':'Saved to GitHub. The live store can take a few more minutes to update. Your changes are not lost.','ok')
+ }catch(e){stat('NOT saved: '+e.message+'. Your edits are still on this page. Check the token (Contents: Read and write) and try again.','err')}
  $('save').disabled=false};
 load();
 </script></body></html>
