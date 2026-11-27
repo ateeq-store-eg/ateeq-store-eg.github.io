@@ -367,7 +367,8 @@ $('track').innerHTML=P.map((p,k)=>`<article class="card r" style="--d:${k*.1}s" 
 <fieldset class="vr" style="border:0;padding:0;min-width:0;margin:1px 0 8px">${[30,50,100].map(s=>`<label><input type="radio" name="s${k}" value="${s}" ${s==50?'checked':''}><span>${s} ml</span></label>`).join('')}</fieldset>
 <div class="pr">Price <strong data-pr>${fmt(p.p)}</strong></div>
 <button class="paper dark b add wt"><span class="lbl">Add to bag</span><i class="wet"></i></button></div></article>`).join('');
-q('.card').forEach(c=>{const p=P[c.dataset.i];q('input',c).forEach(r=>r.onchange=()=>c.querySelector('[data-pr]').textContent=fmt(Math.round(p.p*mult[r.value]/10)*10))});
+q('.card').forEach(c=>{const p=P[c.dataset.i];q('input',c).forEach(r=>r.onchange=()=>c.querySelector('[data-pr]').textContent=fmt(sized(p,+r.value)))});
+q('.card').forEach(c=>{const go=()=>{location.hash='#/product/'+slug(P[c.dataset.i].n)};[c.querySelector('.cm'),c.querySelector('h3')].forEach(e=>{e.style.cursor='pointer';e.setAttribute('role','link');e.tabIndex=0;e.addEventListener('click',go);e.addEventListener('keydown',ev=>{if(ev.key=='Enter')go()})})});
 document.addEventListener('click',e=>{const b=e.target.closest('.wt');if(!b)return;b.classList.remove('is-wet');void b.offsetWidth;b.classList.add('is-wet');setTimeout(()=>b.classList.remove('is-wet'),1100)});
 const tr=$('track');function upd(){$('pv').disabled=tr.scrollLeft<4;$('nx').disabled=tr.scrollLeft+tr.clientWidth>=tr.scrollWidth-4}
 const step=()=>tr.querySelector('.card').offsetWidth+16;
@@ -380,7 +381,7 @@ $('lines').innerHTML=cart.length?cart.map((l,i)=>`<div class="ln"><div class="th
 function qty(i,d){cart[i].q+=d;if(cart[i].q<=0)cart.splice(i,1);draw()}
 function openP(el){$(el).classList.add('on');$('ov').classList.add('on');document.body.classList.add('lock')}
 const closeAll=()=>{['dr','sp','mm'].forEach(x=>$(x).classList.remove('on'));$('ov').classList.remove('on');document.body.classList.remove('lock')};
-q('.card .add').forEach(b=>b.addEventListener('click',()=>{const c=b.closest('.card'),p=P[c.dataset.i],sz=+c.querySelector('input:checked').value,pr=Math.round(p.p*mult[sz]/10)*10;
+q('.card .add').forEach(b=>b.addEventListener('click',()=>{const c=b.closest('.card'),p=P[c.dataset.i];if(p.out){toast('Sold out');return}const sz=+c.querySelector('input:checked').value,pr=sized(p,sz);
 const f=cart.find(l=>l.n==p.n&&l.sz==sz);f?f.q++:cart.push({n:p.n,c:p.c,sz,pr,q:1});draw();setTimeout(()=>{closeAll();openP('dr')},650)}));
 $('bag').onclick=$('bag2').onclick=e=>{e.preventDefault();openP('dr')};$('dx').onclick=$('ov').onclick=closeAll;
 $('ck').onclick=()=>toast('Checkout is a design demo');
