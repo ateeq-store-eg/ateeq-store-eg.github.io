@@ -25,10 +25,15 @@
     "Vanilla, musk, sandalwood"
    ],
    "desc": "شوية ريحه فاجرين",
-   "img": "img/pmwy8jpog0.jpg",
+   "img": "img/pmwy8yc120.png",
    "out": false,
    "s30": 320,
-   "s100": 1350
+   "s100": 1350,
+   "imgs": [
+    "img/pmwy8yc120.png",
+    "img/pmwy8yc121.png"
+   ],
+   "arc": "Made by mohamed Osama "
   },
   {
    "n": "محمد عطر",
@@ -47,7 +52,10 @@
    ],
    "desc": "Extrait de parfum, long lasting. Placeholder description: replace with your real product copy.",
    "img": "img/noir-velvet-1795738379081.jpg",
-   "out": false
+   "out": false,
+   "imgs": [
+    "img/noir-velvet-1795738379081.jpg"
+   ]
   },
   {
    "n": "Citrus Mirage",
@@ -66,7 +74,8 @@
    ],
    "desc": "Extrait de parfum, long lasting. Placeholder description: replace with your real product copy.",
    "img": "",
-   "out": false
+   "out": false,
+   "imgs": []
   },
   {
    "n": "Midnight Rose",
@@ -85,7 +94,8 @@
    ],
    "desc": "Extrait de parfum, long lasting. Placeholder description: replace with your real product copy.",
    "img": "",
-   "out": false
+   "out": false,
+   "imgs": []
   },
   {
    "n": "Desert Musk",
@@ -104,7 +114,8 @@
    ],
    "desc": "Extrait de parfum, long lasting. Placeholder description: replace with your real product copy.",
    "img": "",
-   "out": false
+   "out": false,
+   "imgs": []
   }
  ]
 }
